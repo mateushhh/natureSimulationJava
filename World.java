@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class World {
     private ArrayList<Organism> organisms;
@@ -30,6 +31,8 @@ public class World {
         activities.clear();
         int numberOfOrganisms = organisms.size();
         for (int i = 0; i < numberOfOrganisms; i++) {
+            int preX = organisms.get(i).getX();
+            int preY = organisms.get(i).getY();
             if(organisms.get(i) != null && organisms.get(i).alive()){
                 organisms.get(i).action();
                 for(int j = 0; j < numberOfOrganisms; j++) {
@@ -37,15 +40,23 @@ public class World {
                         if(organisms.get(i).getX() == organisms.get(j).getX() && organisms.get(i).getY() == organisms.get(j).getY()) {
                             int result = organisms.get(i).collision(organisms.get(j));
                             if(result == Constants.KILL) {
-                                organisms.get(j).die();
+                                if(organisms.get(j).collision(organisms.get(i)) == Constants.DIES) {
+                                    organisms.get(j).die();
+                                }
                             }
                             else if (result == Constants.DIES) {
                                 organisms.get(i).die();
                             }
                             else if (result == Constants.BREED){
                                 if(organisms.get(i).getAge()>10 && organisms.get(j).getAge()>10) {
+                                    organisms.get(i).setX(preX);
+                                    organisms.get(i).setY(preY);
                                     addOrganism(organisms.get(i).clone());
                                 }
+                            }
+                            else if (result == Constants.DODGE){
+                                organisms.get(i).setX(preX);
+                                organisms.get(i).setY(preY);
                             }
                         }
                     }
@@ -57,7 +68,7 @@ public class World {
                 organisms.remove(i);
             }
         }
-        //tutaj wprowadź sortowanie organisms po inicjatywie stworzeń
+        Collections.sort(organisms);
     }
 
     public void addOrganism(Organism organism) {

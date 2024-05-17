@@ -1,6 +1,8 @@
 import java.awt.*;
+import java.util.Collections;
 
-public abstract class Organism {
+
+public abstract class Organism implements Comparable<Organism> {
     protected String name;
     protected int strength;
     protected int initiative;
@@ -28,6 +30,11 @@ public abstract class Organism {
     public abstract int collision(Organism otherOrganism);
 
     public abstract void draw(Graphics g, GamePanel panel);
+
+    @Override
+    public int compareTo(Organism other) {
+        return Integer.compare(other.initiative, this.initiative);
+    }
 
     // Getters & Setters
     public String getSymbol() {

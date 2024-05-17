@@ -7,4 +7,5 @@ public class Constants {
     public static final int BREED = 1;
     public static final int KILL = 2;
     public static final int DIES = 3;
+    public static final int DODGE = 4;
 }

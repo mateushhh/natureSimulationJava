@@ -10,11 +10,17 @@ class GamePanel extends JPanel implements KeyListener {
     private int cellSize;
 
     public GamePanel() {
-        world = new World(5, 5);
+        world = new World(10, 10);
         world.addOrganism(new Wolf(3, 4, world));
         world.addOrganism(new Wolf(4, 4, world));
         world.addOrganism(new Sheep(1, 1, world));
         world.addOrganism(new Sheep(0, 0, world));
+        world.addOrganism(new Fox(3, 2, world));
+        world.addOrganism(new Fox(4, 0, world));
+        world.addOrganism(new Turtle(7, 4, world));
+        world.addOrganism(new Turtle(9, 5, world));
+        world.addOrganism(new Antilope(4, 6, world));
+        world.addOrganism(new Antilope(5, 6, world));
 
         setFocusable(true);
         addKeyListener(this);
