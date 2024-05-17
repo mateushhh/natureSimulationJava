@@ -21,6 +21,8 @@ public abstract class Organism {
         this.life = true;
     }
 
+    public abstract Organism clone();
+
     public abstract int action();
 
     public abstract int collision(Organism otherOrganism);
@@ -86,9 +88,5 @@ public abstract class Organism {
 
     public World getWorld() {
         return world;
-    }
-
-    public void setWorld(World world) {
-        this.world = world;
     }
 }

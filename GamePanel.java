@@ -11,8 +11,10 @@ class GamePanel extends JPanel implements KeyListener {
 
     public GamePanel() {
         world = new World(5, 5);
-        world.addOrganism(new Wolf("Wolf", 3, 4, world));
-        world.addOrganism(new Animal("Test", 2, 2, 2, 2, world));
+        world.addOrganism(new Wolf(3, 4, world));
+        world.addOrganism(new Wolf(4, 4, world));
+        world.addOrganism(new Sheep(1, 1, world));
+        world.addOrganism(new Sheep(0, 0, world));
 
         setFocusable(true);
         addKeyListener(this);
@@ -48,7 +50,7 @@ class GamePanel extends JPanel implements KeyListener {
             }
         }
 
-        //Fill in board with organisms
+        //Fill board with organisms
         world.drawOrganisms(g, this);
     }
 
@@ -59,6 +61,11 @@ class GamePanel extends JPanel implements KeyListener {
         g.setColor(Color.RED);
         g.drawString("Activity Log:", panelWidth / 2 + 2 * margin, 2 * margin);
         g.drawString("Turn: " + turnCounter, panelWidth / 2 + 2 * margin, 2 * margin + 16);
+        if(world.getActivities()!=null){
+            for(int i = 0; i < world.getActivities().size(); i++){
+                g.drawString(world.getActivities().get(i), panelWidth / 2 + 2 * margin, 2 * margin + 16*(i+2));
+            }
+        }
     }
 
     @Override
@@ -67,6 +74,7 @@ class GamePanel extends JPanel implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+            System.out.println(turnCounter);
             world.executeTurn();
             turnCounter++;
             repaint();

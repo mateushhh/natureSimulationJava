@@ -5,11 +5,13 @@ public class World {
     private ArrayList<Organism> organisms;
     private final int width;
     private final int height;
+    public ArrayList<String> activities;
 
     public World(int width, int height) {
         this.width = width;
         this.height = height;
         this.organisms = new ArrayList<>();
+        this.activities = new ArrayList<>();
     }
 
     public int getHeight() {
@@ -20,8 +22,12 @@ public class World {
         return width;
     }
 
-    //add breed and add Activity Log
+    public ArrayList<String> getActivities() {
+        return activities;
+    }
+
     public void executeTurn() {
+        activities.clear();
         int numberOfOrganisms = organisms.size();
         for (int i = 0; i < numberOfOrganisms; i++) {
             if(organisms.get(i) != null && organisms.get(i).alive()){
@@ -30,12 +36,16 @@ public class World {
                     if(i!=j) {
                         if(organisms.get(i).getX() == organisms.get(j).getX() && organisms.get(i).getY() == organisms.get(j).getY()) {
                             int result = organisms.get(i).collision(organisms.get(j));
-                            if(result == Constants.KILL)
+                            if(result == Constants.KILL) {
                                 organisms.get(j).die();
-                            else if (result == Constants.DIES)
+                            }
+                            else if (result == Constants.DIES) {
                                 organisms.get(i).die();
+                            }
                             else if (result == Constants.BREED){
-                               //to do
+                                if(organisms.get(i).getAge()>10 && organisms.get(j).getAge()>10) {
+                                    addOrganism(organisms.get(i).clone());
+                                }
                             }
                         }
                     }
@@ -47,15 +57,18 @@ public class World {
                 organisms.remove(i);
             }
         }
+        //tutaj wprowadź sortowanie organisms po inicjatywie stworzeń
     }
 
     public void addOrganism(Organism organism) {
-        int x = organism.getX();
-        int y = organism.getY();
-        if (x >= 0 && x < width && y >= 0 && y < height) {
-            organisms.add(organism);
-        } else {
-            System.out.println("Can't add organism, x or y out of bounds");
+        if(organism!=null){
+            int x = organism.getX();
+            int y = organism.getY();
+            if (x >= 0 && x < width && y >= 0 && y < height) {
+                organisms.add(organism);
+            } else {
+                System.out.println("Can't add organism, x or y out of bounds");
+            }
         }
     }
 
@@ -70,6 +83,10 @@ public class World {
             }
         }
         return null;
+    }
+
+    public ArrayList<Organism> getOrganisms() {
+        return organisms;
     }
 
     public void drawOrganisms(Graphics g, GamePanel panel){

@@ -2,8 +2,29 @@ import java.awt.*;
 import java.util.Random;
 
 public class Animal extends Organism {
+
     public Animal(String name, int strength, int initiative, int x, int y, World world) {
         super(name, strength, initiative, x, y, world);
+    }
+
+    @Override
+    public Animal clone() {
+        Animal newAnimal = new Animal(this.name, this.strength, this.initiative, this.x, this.y, this.world);
+        newAnimal.setAge(0);
+        for(int i = x-1; i <= x+1; i++) {
+            for(int j = y-1; j <= y+1; j++) {
+                if(i > 0 && j > 0 && i < world.getWidth() && j < world.getHeight()) {
+                    if(world.getOrganismAt(i,j)==null){
+                        this.setX(i);
+                        this.setY(j);
+                        world.activities.add(this.getName() + " breed.");
+                        System.out.println(this.getName() + " breed.");
+                        return newAnimal;
+                    }
+                }
+            }
+        }
+        return null;
     }
 
     @Override
@@ -45,10 +66,12 @@ public class Animal extends Organism {
         if (this.name.equals(otherOrganism.getName())) {
             return Constants.BREED;
         } else if (this.getStrength() >= otherOrganism.getStrength()) {
-            System.out.println(this.getName() + " killed " + otherOrganism.getName());
+            world.activities.add(this.getName() + " killed " + otherOrganism.getName() + ".");
+            System.out.println(this.getName() + " killed " + otherOrganism.getName() + ".");
             return Constants.KILL;
         } else if (this.getStrength() < otherOrganism.getStrength()) {
-            System.out.println(otherOrganism.getName() + " killed " + this.getName());
+            world.activities.add(otherOrganism.getName() + " killed " + this.getName() + ".");
+            System.out.println(otherOrganism.getName() + " killed " + this.getName() + ".");
             return Constants.DIES;
         }
         return 0;

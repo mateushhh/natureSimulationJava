@@ -1,14 +1,14 @@
 import java.awt.*;
 
-public class Wolf extends Animal {
-    public Wolf(int x, int y, World world) {
-        super("Wolf", 9, 5, x, y, world);
+public class Sheep extends Animal {
+    public Sheep(int x, int y, World world) {
+        super("Sheep", 4, 4, x, y, world);
     }
 
     @Override
-    public Wolf clone() {
-        Wolf newWolf = new Wolf(this.x, this.y, this.world);
-        newWolf.setAge(0);
+    public Sheep clone() {
+        Sheep newSheep = new Sheep(this.x, this.y, this.world);
+        newSheep.setAge(0);
         for(int i = x-1; i <= x+1; i++) {
             for(int j = y-1; j <= y+1; j++) {
                 if(i >= 0 && j >= 0 && i < world.getWidth() && j < world.getHeight()) {
@@ -17,7 +17,7 @@ public class Wolf extends Animal {
                         this.setY(j);
                         world.activities.add(this.getName() + " breed.");
                         System.out.println(this.getName() + " breed.");
-                        return newWolf;
+                        return newSheep;
                     }
                 }
             }
@@ -27,7 +27,7 @@ public class Wolf extends Animal {
 
     @Override
     public void draw(Graphics g, GamePanel panel) {
-        g.setColor(Color.GRAY);
+        g.setColor(Color.PINK);
         g.fillRect(x * panel.getCellSize() + panel.getMargin(), y * panel.getCellSize() + panel.getMargin(), panel.getCellSize(), panel.getCellSize());
         g.setColor(Color.BLACK);
         g.drawRect(x * panel.getCellSize() + panel.getMargin(), y * panel.getCellSize() + panel.getMargin(), panel.getCellSize(), panel.getCellSize());
