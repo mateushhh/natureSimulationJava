@@ -86,11 +86,11 @@ public class Antilope extends Animal {
                             if(world.getOrganismAt(i,j)==null){
                                 this.setX(i);
                                 this.setY(j);
+                                return Constants.NOTHING;
                             }
                         }
                     }
                 }
-                return Constants.NOTHING;
             }
         }
         return Constants.NOTHING;

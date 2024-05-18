@@ -31,10 +31,12 @@ public class World {
         activities.clear();
         int numberOfOrganisms = organisms.size();
         for (int i = 0; i < numberOfOrganisms; i++) {
+            System.out.println(organisms.get(i).getName() + "[" + organisms.get(i).getStrength() + "]");
             int preX = organisms.get(i).getX();
             int preY = organisms.get(i).getY();
             if(organisms.get(i) != null && organisms.get(i).alive()){
-                organisms.get(i).action();
+                if(organisms.get(i).action()==Constants.BREED)
+                    addOrganism(organisms.get(i).clone());
                 for(int j = 0; j < numberOfOrganisms; j++) {
                     if(i!=j) {
                         if(organisms.get(i).getX() == organisms.get(j).getX() && organisms.get(i).getY() == organisms.get(j).getY()) {

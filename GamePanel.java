@@ -21,6 +21,11 @@ class GamePanel extends JPanel implements KeyListener {
         world.addOrganism(new Turtle(9, 5, world));
         world.addOrganism(new Antilope(4, 6, world));
         world.addOrganism(new Antilope(5, 6, world));
+        world.addOrganism(new Grass( 1,9, world));
+        world.addOrganism(new Dandelion(8,6, world));
+        world.addOrganism(new Guarana(5,5, world));
+        world.addOrganism(new Wolfberries(0,5, world));
+        world.addOrganism(new Borsch(7, 9, world));
 
         setFocusable(true);
         addKeyListener(this);
@@ -84,7 +89,6 @@ class GamePanel extends JPanel implements KeyListener {
             world.executeTurn();
             turnCounter++;
             repaint();
-
 
         } else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
             System.exit(0);
