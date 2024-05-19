@@ -107,4 +107,12 @@ public class World {
             organism.draw(g, panel);
         }
     }
+
+    public int saveGame(){
+        return 0;
+    }
+
+    public int loadGame(){
+        return 0;
+    }
 }
