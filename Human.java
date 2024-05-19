@@ -17,9 +17,13 @@ public class Human extends Animal {
     @Override
     public int collision(Organism otherOrganism) {
         if(specialCooldown>5){
-            world.activities.add(this.getName() + " used Alzur's Shield.");
-            return Constants.DODGE;
+            if(otherOrganism instanceof Animal){
+                world.activities.add(this.getName() + " dodged "+ otherOrganism.getName() + " attack with Alzur's Shield.");
+                otherOrganism.action();
+                return Constants.DODGE;
+            }
         }
+
         if (this.getStrength() >= otherOrganism.getStrength()) {
             world.activities.add(this.getName() + " killed " + otherOrganism.getName() + ".");
             System.out.println(this.getName() + " killed " + otherOrganism.getName() + ".");

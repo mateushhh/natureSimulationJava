@@ -66,9 +66,11 @@ public class Animal extends Organism {
         if (this.name.equals(otherOrganism.getName())) {
             return Constants.BREED;
         } else if (this.getStrength() >= otherOrganism.getStrength()) {
-            world.activities.add(this.getName() + " killed " + otherOrganism.getName() + ".");
-            System.out.println(this.getName() + " killed " + otherOrganism.getName() + ".");
-            return Constants.KILL;
+            if(otherOrganism.collision(this)==Constants.DIES) {
+                world.activities.add(this.getName() + " killed " + otherOrganism.getName() + ".");
+                System.out.println(this.getName() + " killed " + otherOrganism.getName() + ".");
+                return Constants.KILL;
+            }
         } else if (this.getStrength() < otherOrganism.getStrength()) {
             return Constants.DIES;
         }
