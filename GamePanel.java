@@ -8,9 +8,12 @@ class GamePanel extends JPanel implements KeyListener {
     private int turnCounter = 0;
     private final int margin = 10;
     private int cellSize;
+    private Human player;
 
     public GamePanel() {
         world = new World(10, 10);
+        player = new Human(3,8,world);
+        world.addOrganism(player);
         world.addOrganism(new Wolf(3, 4, world));
         world.addOrganism(new Wolf(4, 4, world));
         world.addOrganism(new Sheep(1, 1, world));
@@ -89,9 +92,23 @@ class GamePanel extends JPanel implements KeyListener {
             world.executeTurn();
             turnCounter++;
             repaint();
-
+            player.movementLock = false;
         } else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
             System.exit(0);
+        } else if (!player.movementLock){
+            if (e.getKeyCode() == KeyEvent.VK_W) {
+                player.move(Constants.UP);
+                player.movementLock = true;
+            } else if (e.getKeyCode() == KeyEvent.VK_A) {
+                player.move(Constants.LEFT);
+                player.movementLock = true;
+            } else if (e.getKeyCode() == KeyEvent.VK_S) {
+                player.move(Constants.DOWN);
+                player.movementLock = true;
+            } else if (e.getKeyCode() == KeyEvent.VK_D) {
+                player.move(Constants.RIGHT);
+                player.movementLock = true;
+            }
         }
     }
 

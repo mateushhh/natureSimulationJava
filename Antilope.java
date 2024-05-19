@@ -73,8 +73,6 @@ public class Antilope extends Animal {
             return Constants.KILL;
         } else if (this.getStrength() < otherOrganism.getStrength()) {
             if(dodge == 0) {
-                world.activities.add(otherOrganism.getName() + " killed " + this.getName() + ".");
-                System.out.println(otherOrganism.getName() + " killed " + this.getName() + ".");
                 return Constants.DIES;
             }
             else{

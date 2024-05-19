@@ -52,8 +52,6 @@ public class Guarana extends Plant {
             return Constants.KILL;
         } else if (this.getStrength() < otherOrganism.getStrength()) {
             otherOrganism.setStrength(otherOrganism.getStrength()+3);
-            world.activities.add(otherOrganism.getName() + " killed " + this.getName() + ".");
-            System.out.println(otherOrganism.getName() + " killed " + this.getName() + ".");
             return Constants.DIES;
         }
         return 0;

@@ -65,8 +65,6 @@ public class Plant extends Organism {
             System.out.println(this.getName() + " killed " + otherOrganism.getName() + ".");
             return Constants.KILL;
         } else if (this.getStrength() < otherOrganism.getStrength()) {
-            world.activities.add(otherOrganism.getName() + " killed " + this.getName() + ".");
-            System.out.println(otherOrganism.getName() + " killed " + this.getName() + ".");
             return Constants.DIES;
         }
         return 0;

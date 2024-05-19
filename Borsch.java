@@ -50,14 +50,14 @@ public class Borsch extends Plant {
         for(int i = x-1; i <= x+1; i++){
             for(int j = y-1; j <= y+1; j++){
                 Organism o = world.getOrganismAt(i,j);
-                if(o != null && !o.getName().equals("Borsch")){
+                if(o instanceof Animal && o.alive()){
                     o.die();
                     world.activities.add(this.getName() + " killed " + o.getName() + ".");
                 }
             }
         }
 
-        if (spreadChance < 5) {
+        if (spreadChance < 3) {
             this.setAge(this.getAge() + 1);
             return Constants.BREED;
         }
