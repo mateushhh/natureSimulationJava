@@ -5,6 +5,15 @@ public class Human extends Animal {
 
     public Human(int x, int y, World world) {
         super("Human", 5, 4, x, y, world);
+        life = true;
+    }
+
+    public void setWorld(World w){
+        this.world = w;
+    }
+
+    public void setLife(boolean l){
+        life = l;
     }
 
     @Override

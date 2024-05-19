@@ -4,10 +4,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Random;
 
 class GamePanel extends JPanel implements KeyListener {
     private World world;
-    private int turnCounter = 0;
     private final int margin = 10;
     private final int topMargin = 32;
     private int cellSize;
@@ -17,26 +17,67 @@ class GamePanel extends JPanel implements KeyListener {
     private JButton saveGameButton;
     private JButton quitGameButton;
 
-    public GamePanel() {
-        world = new World(10, 10);
+    public GamePanel(int worldWidth, int worldHeight, boolean newGame) {
+        if(newGame) {
+            world = new World(worldWidth, worldHeight);
 
-        player = new Human(3, 8, world);
-        world.addOrganism(player);
-        world.addOrganism(new Wolf(3, 4, world));
-        world.addOrganism(new Wolf(4, 4, world));
-        world.addOrganism(new Sheep(1, 1, world));
-        world.addOrganism(new Sheep(0, 0, world));
-        world.addOrganism(new Fox(3, 2, world));
-        world.addOrganism(new Fox(4, 0, world));
-        world.addOrganism(new Turtle(7, 4, world));
-        world.addOrganism(new Turtle(9, 5, world));
-        world.addOrganism(new Antilope(4, 6, world));
-        world.addOrganism(new Antilope(5, 6, world));
-        world.addOrganism(new Grass(1, 9, world));
-        world.addOrganism(new Dandelion(8, 6, world));
-        world.addOrganism(new Guarana(5, 5, world));
-        world.addOrganism(new Wolfberries(0, 5, world));
-        world.addOrganism(new Borsch(7, 9, world));
+            Random rand = new Random();
+            int posX = rand.nextInt(worldWidth);
+            int posY = rand.nextInt(worldHeight);
+            player = new Human(posX, posY, world);
+            world.addOrganism(player);
+
+            int organismType;
+
+            //Fill world with Animals
+            for(int i = 0; i < worldWidth*worldHeight*0.07 ; i++) {
+                posX = rand.nextInt(worldWidth);
+                posY = rand.nextInt(worldHeight);
+
+                organismType = rand.nextInt(5);
+                Organism newOrganism = null;
+
+                if(world.getOrganismAt(posX,posY)==null){
+                    if(organismType==0)
+                        newOrganism = new Antilope(posX,posY,world);
+                    else if(organismType==1)
+                        newOrganism = new Fox(posX,posY,world);
+                    else if(organismType==2)
+                        newOrganism = new Sheep(posX,posY,world);
+                    else if(organismType==3)
+                        newOrganism = new Turtle(posX,posY,world);
+                    else if(organismType==4)
+                        newOrganism = new Wolf(posX,posY,world);
+
+                    world.addOrganism(newOrganism);
+                }
+            }
+            for(int i = 0; i < worldWidth*worldHeight*0.03 ; i++) {
+                posX = rand.nextInt(worldWidth);
+                posY = rand.nextInt(worldHeight);
+
+                organismType = rand.nextInt(5);
+                Organism newOrganism = null;
+
+                if(world.getOrganismAt(posX,posY)==null){
+                    if(organismType==0)
+                        newOrganism = new Borsch(posX,posY,world);
+                    else if(organismType==1)
+                        newOrganism = new Dandelion(posX,posY,world);
+                    else if(organismType==2)
+                        newOrganism = new Grass(posX,posY,world);
+                    else if(organismType==3)
+                        newOrganism = new Guarana(posX,posY,world);
+                    else if(organismType==4)
+                        newOrganism = new Wolfberries(posX,posY,world);
+
+                    world.addOrganism(newOrganism);
+                }
+            }
+        } else if (newGame==false) {
+            world = new World(worldWidth, worldHeight);
+            player = new Human(0,0,world);
+        }
 
         setLayout(new FlowLayout(FlowLayout.LEFT));
 
@@ -58,13 +99,26 @@ class GamePanel extends JPanel implements KeyListener {
         saveGameButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                world.saveGame();
+                JFileChooser fileChooser = new JFileChooser();
+                int returnValue = fileChooser.showSaveDialog(GamePanel.this);
+
+                if (returnValue == JFileChooser.APPROVE_OPTION) {
+                    String fileName = fileChooser.getSelectedFile().getName();
+                    world.saveGame(fileName);
+                }
             }
         });
         loadGameButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                world.loadGame();
+                JFileChooser fileChooser = new JFileChooser();
+                int returnValue = fileChooser.showSaveDialog(GamePanel.this);
+
+                if (returnValue == JFileChooser.APPROVE_OPTION) {
+                    String fileName = fileChooser.getSelectedFile().getName();
+                    world.loadGame(fileName, player);
+                    repaint();
+                }
             }
         });
         quitGameButton.addActionListener(new ActionListener() {
@@ -81,6 +135,14 @@ class GamePanel extends JPanel implements KeyListener {
 
         setFocusable(true);
         addKeyListener(this);
+    }
+
+    public World getWorld() {
+        return world;
+    }
+
+    public Human getPlayer(){
+        return player;
     }
 
     public int getMargin() {
@@ -126,15 +188,15 @@ class GamePanel extends JPanel implements KeyListener {
 
         g.setColor(Color.RED);
         g.drawString("Activity Log:", panelWidth / 2 + 2 * margin, 2 * margin + topMargin);
-        g.drawString("Turn: " + turnCounter, panelWidth / 2 + 2 * margin, 2 * margin + 16 + topMargin);
+        g.drawString("Turn: " + world.turnCounter, panelWidth / 2 + 2 * margin, 2 * margin + 16 + topMargin);
         if(player.alive()){
             if(player.specialCooldown > 5)
                 g.drawString("Special Ability: ACTIVE", panelWidth / 2 + 2 * margin, 2 * margin + 16*2 + topMargin);
-            else if(player.specialCooldown < 5 && player.specialCooldown > 0){
+            else if(player.specialCooldown <= 5 && player.specialCooldown > 0){
                 g.drawString("Special Ability: CHARGING (Wait " + player.specialCooldown + " turns to use it)", panelWidth / 2 + 2 * margin, 2 * margin + 16*2 + topMargin);
             }
             else{
-                g.drawString("Special Ability: READY", panelWidth / 2 + 2 * margin, 2 * margin + 16*2 + topMargin);
+                g.drawString("Special Ability: READY (Press E to use it)", panelWidth / 2 + 2 * margin, 2 * margin + 16*2 + topMargin);
             }
         }
         if (world.getActivities() != null) {
@@ -145,9 +207,9 @@ class GamePanel extends JPanel implements KeyListener {
     }
 
     private void executeTurn() {
-        System.out.println(turnCounter);
+        System.out.println(world.turnCounter);
         world.executeTurn();
-        turnCounter++;
+        world.turnCounter++;
         repaint();
         player.movementLock = false;
     }
@@ -180,7 +242,6 @@ class GamePanel extends JPanel implements KeyListener {
             }
         }
     }
-
 
         @Override
         public void keyReleased(KeyEvent e) {}
