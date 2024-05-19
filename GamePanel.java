@@ -54,7 +54,6 @@ class GamePanel extends JPanel implements KeyListener {
 
         cellSize = Math.min(panelWidth/2 / world.getWidth(), panelHeight / world.getHeight());
 
-        //Draw board gridlines
         for (int i = 0; i < world.getWidth(); i++) {
             for (int j = 0; j < world.getHeight(); j++) {
                 g.setColor(Color.WHITE);
@@ -64,7 +63,6 @@ class GamePanel extends JPanel implements KeyListener {
             }
         }
 
-        //Fill board with organisms
         world.drawOrganisms(g, this);
     }
 
