@@ -127,9 +127,19 @@ class GamePanel extends JPanel implements KeyListener {
         g.setColor(Color.RED);
         g.drawString("Activity Log:", panelWidth / 2 + 2 * margin, 2 * margin + topMargin);
         g.drawString("Turn: " + turnCounter, panelWidth / 2 + 2 * margin, 2 * margin + 16 + topMargin);
+        if(player.alive()){
+            if(player.specialCooldown > 5)
+                g.drawString("Special Ability: ACTIVE", panelWidth / 2 + 2 * margin, 2 * margin + 16*2 + topMargin);
+            else if(player.specialCooldown < 5 && player.specialCooldown > 0){
+                g.drawString("Special Ability: CHARGING (Wait " + player.specialCooldown + " turns to use it)", panelWidth / 2 + 2 * margin, 2 * margin + 16*2 + topMargin);
+            }
+            else{
+                g.drawString("Special Ability: READY", panelWidth / 2 + 2 * margin, 2 * margin + 16*2 + topMargin);
+            }
+        }
         if (world.getActivities() != null) {
             for (int i = 0; i < world.getActivities().size(); i++) {
-                g.drawString(world.getActivities().get(i), panelWidth / 2 + 2 * margin, 2 * margin + 16 * (i + 2) + topMargin);
+                g.drawString(world.getActivities().get(i), panelWidth / 2 + 2 * margin, 2 * margin + 16 * (i + 3) + topMargin);
             }
         }
     }
@@ -165,9 +175,13 @@ class GamePanel extends JPanel implements KeyListener {
                 player.move(Constants.RIGHT);
                 player.movementLock = true;
             }
+            else if (e.getKeyCode() == KeyEvent.VK_E && player.specialCooldown <= 0) {
+                player.special();
+            }
         }
     }
 
-    @Override
-    public void keyReleased(KeyEvent e) {}
+
+        @Override
+        public void keyReleased(KeyEvent e) {}
 }

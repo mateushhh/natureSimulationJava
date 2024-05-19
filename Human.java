@@ -1,13 +1,33 @@
 import java.awt.*;
 public class Human extends Animal {
+    public boolean movementLock;
+    public int specialCooldown = 0;
+
     public Human(int x, int y, World world) {
         super("Human", 5, 4, x, y, world);
     }
-    public boolean movementLock;
 
     @Override
     public int action() {
+        System.out.println("specialCooldown" + specialCooldown);
+        specialCooldown--;
         return Constants.NOTHING;
+    }
+
+    @Override
+    public int collision(Organism otherOrganism) {
+        if(specialCooldown>5){
+            world.activities.add(this.getName() + " used Alzur's Shield.");
+            return Constants.DODGE;
+        }
+        if (this.getStrength() >= otherOrganism.getStrength()) {
+            world.activities.add(this.getName() + " killed " + otherOrganism.getName() + ".");
+            System.out.println(this.getName() + " killed " + otherOrganism.getName() + ".");
+            return Constants.KILL;
+        } else if (this.getStrength() < otherOrganism.getStrength()) {
+            return Constants.DIES;
+        }
+        return 0;
     }
 
     public void move(int direction) {
@@ -26,6 +46,11 @@ public class Human extends Animal {
                 break;
         }
         movementLock = false;
+    }
+
+    public void special(){
+        world.activities.add(this.getName() + " activated Alzur's Shield.");
+        specialCooldown = 10;
     }
 
     @Override
