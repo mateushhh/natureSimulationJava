@@ -1,12 +1,9 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 import java.util.Random;
 
-class GamePanel extends JPanel implements KeyListener {
+class GamePanel extends JPanel implements KeyListener, MouseListener {
     private World world;
     private final int margin = 10;
     private final int topMargin = 32;
@@ -29,7 +26,7 @@ class GamePanel extends JPanel implements KeyListener {
 
             int organismType;
 
-            //Fill world with Animals
+            // Fill world with Animals
             for(int i = 0; i < worldWidth*worldHeight*0.07 ; i++) {
                 posX = rand.nextInt(worldWidth);
                 posY = rand.nextInt(worldHeight);
@@ -74,7 +71,7 @@ class GamePanel extends JPanel implements KeyListener {
                     world.addOrganism(newOrganism);
                 }
             }
-        } else if (newGame==false) {
+        } else {
             world = new World(worldWidth, worldHeight);
             player = new Human(0,0,world);
         }
@@ -112,7 +109,7 @@ class GamePanel extends JPanel implements KeyListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFileChooser fileChooser = new JFileChooser();
-                int returnValue = fileChooser.showSaveDialog(GamePanel.this);
+                int returnValue = fileChooser.showOpenDialog(GamePanel.this);
 
                 if (returnValue == JFileChooser.APPROVE_OPTION) {
                     String fileName = fileChooser.getSelectedFile().getName();
@@ -135,6 +132,7 @@ class GamePanel extends JPanel implements KeyListener {
 
         setFocusable(true);
         addKeyListener(this);
+        addMouseListener(this);
     }
 
     public World getWorld() {
@@ -239,10 +237,87 @@ class GamePanel extends JPanel implements KeyListener {
             }
             else if (e.getKeyCode() == KeyEvent.VK_E && player.specialCooldown <= 0) {
                 player.special();
+                player.movementLock = true;
+            }
+            //repaint();
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {}
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        int x = (e.getX() - margin) / cellSize;
+        int y = (e.getY() - margin - topMargin) / cellSize;
+
+        if (x >= 0 && x < world.getWidth() && y >= 0 && y < world.getHeight()) {
+            if (world.getOrganismAt(x, y) == null) {
+                String[] organismOptions = {"Antilope", "Fox", "Sheep", "Turtle", "Wolf", "Borsch", "Dandelion", "Grass", "Guarana", "Wolfberries"};
+                String selectedOrganism = (String) JOptionPane.showInputDialog(
+                        this,
+                        "Select an organism to add:",
+                        "Add Organism",
+                        JOptionPane.PLAIN_MESSAGE,
+                        null,
+                        organismOptions,
+                        organismOptions[0]
+                );
+
+                if (selectedOrganism != null) {
+                    Organism newOrganism = null;
+
+                    switch (selectedOrganism) {
+                        case "Antilope":
+                            newOrganism = new Antilope(x, y, world);
+                            break;
+                        case "Fox":
+                            newOrganism = new Fox(x, y, world);
+                            break;
+                        case "Sheep":
+                            newOrganism = new Sheep(x, y, world);
+                            break;
+                        case "Turtle":
+                            newOrganism = new Turtle(x, y, world);
+                            break;
+                        case "Wolf":
+                            newOrganism = new Wolf(x, y, world);
+                            break;
+                        case "Borsch":
+                            newOrganism = new Borsch(x, y, world);
+                            break;
+                        case "Dandelion":
+                            newOrganism = new Dandelion(x, y, world);
+                            break;
+                        case "Grass":
+                            newOrganism = new Grass(x, y, world);
+                            break;
+                        case "Guarana":
+                            newOrganism = new Guarana(x, y, world);
+                            break;
+                        case "Wolfberries":
+                            newOrganism = new Wolfberries(x, y, world);
+                            break;
+                    }
+
+                    if (newOrganism != null) {
+                        world.addOrganism(newOrganism);
+                        repaint();
+                    }
+                }
             }
         }
     }
 
-        @Override
-        public void keyReleased(KeyEvent e) {}
+    @Override
+    public void mousePressed(MouseEvent e) {}
+
+    @Override
+    public void mouseReleased(MouseEvent e) {}
+
+    @Override
+    public void mouseEntered(MouseEvent e) {}
+
+    @Override
+    public void mouseExited(MouseEvent e) {}
 }
